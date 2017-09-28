@@ -1,23 +1,37 @@
 const express = require('express');
+const exphbs = require('express-handlebars');
+const mongoose = require('mongoose');
 
 const app = express();
 
-// how middleware works
-app.use((req, res, next) => {
-    // console.log(Date.now());
-    req.name = 'Nicky Meuleman';
-    next();
-});
+// Map global promise - get rid of mongoose promise warning
+mongoose.Promise = global.Promise;
+// Connect to mongoose
+mongoose.connect('mongodb://localhost/vidjot-dev', {
+    useMongoClient: true
+})
+    .then(() => console.log('MongoDB Connected...'))
+    .catch(err => console.log(err));
+
+//  Load Idea Model
+require('./models/Idea');
+const Idea = mongoose.model('ideas');
+
+// Handlebars middleware
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
 
 // Index Route
 app.get('/', (req, res) => {
-    console.log(req.name);
-    res.send(req.name);
+    const title = 'welcome, blabla';
+    res.render('index', {
+        title: title
+    });
 });
 
 // About Route
 app.get('/about', (req, res) => {
-    res.send('ABOUT1');
+    res.render('about');
 });
 
 const port = 5000;

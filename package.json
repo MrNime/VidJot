@@ -10,7 +10,9 @@
   "license": "MIT",
   "dependencies": {
     "eslint": "^4.7.2",
-    "express": "^4.15.5"
+    "express": "^4.15.5",
+    "express-handlebars": "^3.0.0",
+    "mongoose": "^4.11.13"
   },
   "devDependencies": {
     "eslint-config-standard": "^10.2.1",

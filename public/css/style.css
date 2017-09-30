@@ -8,6 +8,10 @@ body {
     flex: 1 0 auto;
   }
 
+span {
+  color: #007bff;
+}
+
 .logo {
     width:50%;
     margin: auto;

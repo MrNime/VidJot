@@ -19,13 +19,16 @@ router.get('/register', (req, res) => {
 });
 
 // Login form POST
-router.post('/login', (req, res, next) => {
+router.post('/login',
     passport.authenticate('local', {
-        successRedirect: '/ideas',
         failureRedirect: '/users/login',
         failureFlash: true
-    })(req, res, next);
-});
+    }),
+    (req, res, next) => {
+        req.flash('success_msg', `Welcome ${req.user.name}!`);
+        res.redirect('/ideas');
+    }
+);
 
 // Register form POST
 router.post('/register', (req, res) => {
@@ -72,9 +75,7 @@ router.post('/register', (req, res) => {
                         if (err) {
                             throw err;
                         }
-                        console.log('pre-encrypt' + JSON.stringify(newUser));
                         newUser.password = hash;
-                        console.log('post-encrypt' + JSON.stringify(newUser));
                         new User(newUser)
                             .save()
                             .then(idea => {

@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
-const {ensureAuthenticated} = require('../helpers/auth');
+const { ensureAuthenticated } = require('../helpers/auth');
 
 //  Load Idea Model
 require('../models/Idea');
@@ -9,7 +9,7 @@ const Idea = mongoose.model('ideas');
 
 // Idea Index page
 router.get('/', ensureAuthenticated, (req, res) => {
-    Idea.find({user: req.user.id})
+    Idea.find({ user: req.user.id })
         .sort({ date: 'desc' })
         .then(ideas => {
             res.render('ideas/index', {
@@ -66,7 +66,7 @@ router.post('/', ensureAuthenticated, (req, res) => {
         new Idea(newUser)
             .save()
             .then(idea => {
-                req.flash('success_msg', 'Video idea added');
+                req.flash('success_msg', 'Bulb added');
                 res.redirect('/ideas');
             });
     }
@@ -82,11 +82,27 @@ router.put('/:id', ensureAuthenticated, (req, res) => {
             idea.title = req.body.title;
             idea.details = req.body.details;
 
-            idea.save()
-                .then(idea => {
-                    req.flash('success_msg', 'Video idea edited');
-                    res.redirect('/ideas');
+            let errors = [];
+
+            if (!req.body.title) {
+                errors.push({ text: 'Please add a title' });
+            }
+            if (!req.body.details) {
+                errors.push({ text: 'Please add some details' });
+            }
+
+            if (errors.length > 0) {
+                res.render('ideas/edit', {
+                    errors: errors,
+                    idea: idea
                 });
+            } else {
+                idea.save()
+                    .then(idea => {
+                        req.flash('success_msg', 'Bulb edited');
+                        res.redirect('/ideas');
+                    });
+            }
         });
 });
 

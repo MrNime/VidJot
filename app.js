@@ -19,7 +19,7 @@ require('./config/passport')(passport);
 
 // DB config
 const db = require('./config/database');
-
+console.log(db.mongoURI);
 // Map global promise - get rid of mongoose promise warning
 mongoose.Promise = global.Promise;
 // Connect to mongoose

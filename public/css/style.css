@@ -17,3 +17,7 @@ span {
     width:50%;
     margin: auto;
 }
+
+textarea {
+  min-height: 8em;
+}
